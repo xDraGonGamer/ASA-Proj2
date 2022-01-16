@@ -18,6 +18,9 @@ Dado um grafo dirigido G = (V,E) e dois vértices v1, v2 ∈ V, pretende determi
 se G forma uma árvore genealógica válida e, caso forme, (2) o conjunto de ancestrais comuns
 mais próximos entre v1 e v2.
 
+# Exemplo
+
+
 #Input
 
 O ficheiro de entrada contém a informação relativa à árvore genealógica a ser processada e aos
