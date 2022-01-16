@@ -18,7 +18,7 @@ Dado um grafo dirigido G = (V,E) e dois vértices v1, v2 ∈ V, pretende determi
 se G forma uma árvore genealógica válida e, caso forme, (2) o conjunto de ancestrais comuns
 mais próximos entre v1 e v2.
 
-##Input
+#Input
 
 O ficheiro de entrada contém a informação relativa à árvore genealógica a ser processada e aos
 vértices v1 e v2, cujos ancestrais comuns mais próximos devem ser calculados, e é definido da
@@ -30,7 +30,7 @@ seguinte forma:
 indicando que y é filho de x.
 Os identificadores dos vértices são números inteiros entre 1 e n.
 
-##Output
+#Output
 
 O programa deverá escrever no output “0” se o grafo não formar uma árvore válida. Caso contrário, deverá escrever no output a sequência dos identificadores de todos os ancestrais comuns
 mais próximos, ordenados por valor crescente e separados por um espaço em branco (termine
