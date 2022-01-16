@@ -11,4 +11,6 @@ um progenitor e nós com dois progenitores. Dados dois nós P1 e P2 de uma árvo
 Observamos que a definição de ancestral comum mais próximo permite que dois nós tenham
 vários ancestrais comuns mais próximos. Por exemplo, no grafo abaixo, v2 e v4 são ambos
 ancestrais comuns mais próximos de v5 e v6.
-![image](https://user-images.githubusercontent.com/29461917/149673346-3c230c22-95d3-4d7e-86bc-b0fa1bbc1ada.png)
+
+![image](https://user-images.githubusercontent.com/29461917/149673403-b6e01562-7303-4133-b5ec-70a7914ef1be.png)
+
