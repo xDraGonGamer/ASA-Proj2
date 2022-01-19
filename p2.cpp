@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <unordered_map>
 
 void printGraph(std::vector<std::vector<int>> &graph, int size);
 void computeInput();
