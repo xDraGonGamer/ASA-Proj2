@@ -3,28 +3,13 @@
 
 void printGraph(std::vector<std::vector<int>> &graph, int size);
 void computeInput();
-std::vector<int> topologicalSort(std::vector<std::vector<int>> &graph);
+std::vector<int> topologicalSort(std::vector<std::vector<int>> &graph, std::vector<bool> &visited);
 
 int main() {
     computeInput();
     return 0;
 }
 
-/**
- * @brief 
- *      Sorts the given graph, topologically
- * 
- * @param graph
- * @return
- *      the sorted graph
- */
-std::vector<int> topologicalSort(std::vector<std::vector<int>> &graph) {
-    std::vector<int> sorted_graph;
-
-    // do the stuffs brr
-
-    return sorted_graph;
-}
 
 /**
  * @brief 
@@ -53,11 +38,8 @@ void computeInput() {
     }
 
     int u, v;
-
     // Graph used to represent the tree (adjacency list)
     std::vector<std::vector<int>> graph(n_vertices);
-    // Vector used to know if a certain node has been visited or not
-    std::vector<bool> visited(n_vertices, false);
 
     for (int i = 0; i < n_edges; i++) {
         if (scanf("%d %d", &u, &v) != 2) {
@@ -69,10 +51,31 @@ void computeInput() {
         graph[u-1].push_back(v);
     }
 
+    // Vector used to know if a certain node has been visited or not
+    std::vector<bool> visited(n_vertices, false);
+
     printGraph(graph, n_vertices);
 
-    std::vector<int> sorted_graph = topologicalSort(graph);
+    std::vector<int> sorted_graph = topologicalSort(graph, visited);
 }
+
+
+/**
+ * @brief 
+ *      Sorts the given graph, topologically
+ * 
+ * @param graph
+ * @return
+ *      the sorted graph
+ */
+std::vector<int> topologicalSort(std::vector<std::vector<int>> &graph, std::vector<bool> &visited) {
+    std::vector<int> sorted_graph;
+
+    // do the stuffs brr
+
+    return sorted_graph;
+}
+
 
 void printGraph(std::vector<std::vector<int>> &graph, int size) {
     for (int i = 0; i < size; i++) {
