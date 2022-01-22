@@ -35,12 +35,12 @@ void computeInput() {
     int v1, v2, n_vertices, n_edges;
 
     if (scanf("%d %d", &v1, &v2) != 2) {
-        std::cout << 0;
+        std::cout << 0 << std::endl;
         return;
     }
 
     if (scanf("%d %d", &n_vertices, &n_edges) != 2) {
-        std::cout << 0;
+        std::cout << 0 << std::endl;
         return;
     }
 
@@ -68,7 +68,7 @@ void computeInput() {
 
     for (int i = 0; i < n_edges; i++) {
         if (scanf("%d %d", &u, &v) != 2) {
-            std::cout << 0;
+            std::cout << 0 << std::endl;
             return;   
         }
 
