@@ -1,20 +1,21 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
-void printGraph(std::vector<std::vector<int>> &graph, int size);
+#define parent1 0
+#define parent2 1
+#define n_parents 2
+#define weight 3
+#define visited 4
+
 void computeInput();
-std::vector<int> topologicalSort(std::vector<std::vector<int>> &graph, std::vector<bool> &visited);
+void DFS(int** graph, int target_node, int curr_weight);
+void getLCA(int** graph, int n_vertices, int n_edges);
 
 int main() {
     computeInput();
     return 0;
 }
 
-typedef struct Node {
-    std::vector<int> parents;
-    std::vector<int> children;
-} node;
 
 /**
  * @brief 
@@ -32,19 +33,37 @@ typedef struct Node {
 void computeInput() {
     int v1, v2, n_vertices, n_edges;
 
-    if (scanf("%d %d", &v1, &v2) != 2) { // le o v1 e o v2
+    if (scanf("%d %d", &v1, &v2) != 2) {
         std::cout << 0;
         return;
     }
 
-    if (scanf("%d %d", &n_vertices, &n_edges) != 2) { // le o numero de vertices e o n de arcos
+    if (scanf("%d %d", &n_vertices, &n_edges) != 2) {
         std::cout << 0;
         return;
     }
 
     int u, v;
-    // Graph used to represent the tree (adjacency list)
-    std::vector<node> graph(n_vertices);
+    // Graph used to represent the tree (transpose graph). Where each
+    // index is used as the identifier of the node, and contains its
+    // parent(s) id, aswell as some extra information (explained bellow).
+    int** graph = new int*[n_vertices];
+    for (int i = 0; i < n_vertices; i++) {
+        // We initialize all the nodes with an array of 4 posiztion:
+        // ----------------------------------------------------------
+        //   index 0 (parent1): first parent node
+        //   index 1 (parent2): second parent node (if needed)
+        //   index 2 (n_paents): number of parents
+        //   index 3 (weight): weight of the node (to be found after the DFS)
+        //   index 4 (visited): number of times the node has been visited (DFS)
+        graph[i] = new int[5];
+
+        graph[i][parent1] = -1;
+        graph[i][parent2] = -1;
+        graph[i][n_parents] = 0;
+        graph[i][weight] = n_edges;
+        graph[i][visited] = 0;
+    }
 
     for (int i = 0; i < n_edges; i++) {
         if (scanf("%d %d", &u, &v) != 2) {
@@ -52,62 +71,83 @@ void computeInput() {
             return;   
         }
 
-        // 1 2
-        
-        // graph[u-1] because the identifiers go from 1 to n_vetices
-        graph[u-1].children.push_back(v);
-        graph[v-1].parents.push_back(u);
+        int parent_pos = graph[v-1][n_parents];
+
+        // If the node has more than 2 parents, the tree is invalid.
+        if (parent_pos == 2) {
+            std::cout << "-" << std::endl;
+            return;
+        }
+
+        graph[v-1][parent_pos] = u;
+
+        // Increments the number of parents of the node
+        graph[v-1][n_parents]++;
     }
 
-    // Vector used to know if a certain node has been visited or not
-    std::vector<bool> visited(n_vertices, false);
+    DFS(graph, v1, 0);
+    DFS(graph, v2, 0);
 
-    printGraph(graph, n_vertices);
-
-    std::vector<int> sorted_graph = topologicalSort(graph, visited, n_vertices);
-
-
+    getLCA(graph, n_vertices, n_edges);
 }
 
 
-/**
- * @brief 
- *      Sorts the given graph, topologically
- * 
- * @param graph
- * @return
- *      the sorted graph
- */
-std::vector<int> topologicalSort(std::vector<node> &graph, std::vector<bool> &visited, int size) {
-    std::vector<int> sorted_graph;
+void DFS(int** graph, int target_node, int curr_weight) {
+    // We decrement the targe_node because, once again, the node
+    // ids go from 1 to n, and we want them to go from 0 to n-1.
+    target_node--;
 
-    for(int i = 0; i < size; i++){
+    if (graph[target_node][n_parents] == 0) {
+        // Node has no parents and so we end the algorithm
+        if (graph[target_node][weight] > curr_weight) {
+            graph[target_node][weight] = curr_weight;
+        }
+        graph[target_node][visited]++;
+        return;
+    }
 
-        for(int son: graph[i].children){
-            if(!visited[son - 1]){
-                visited[son - 1] = true;
-                sorted_graph.push_back(son);
+    // We only want to keep the lowest cost to get to a certain node (weight),
+    // whether its from node v1 or v2, we only want the lowest one.
+    if (graph[target_node][weight] > curr_weight) {
+        graph[target_node][weight] = curr_weight;
+    }
+    graph[target_node][visited]++;
+
+    for (int i = 0; i < graph[target_node][n_parents]; i++) {
+        DFS(graph, graph[target_node][i], curr_weight+1);
+    }
+}
+
+
+void getLCA(int** graph, int n_vertices, int n_edges) {
+    std::vector<int> common_nodes;
+    int min = n_edges, n_lca = 0;
+
+
+    for (int i = 0; i < n_vertices; i++) {
+        // If the node has been visited atleast 2 times its a common node
+        // between the two DFS.
+        if (graph[i][visited] >= 2) {
+            common_nodes.push_back(i);
+
+            if (graph[i][weight] < min) {
+                min = graph[i][weight];
+                n_lca = 0;
+            }
+            n_lca++;
+        }
+    }
+
+    for (auto node_id: common_nodes) {
+        if (graph[node_id][weight] == min) {
+            if (n_lca >  1) {
+                std::cout << node_id+1 << " ";
+            }
+            else {
+                std::cout << node_id+1;
             }
         }
-
-        if(!visited[i]){ //if the vertice has not been visited
-            visited[i] = true;
-            sorted_graph.push_back(i + 1);
-        }
-
     }
-    std::reverse(sorted_graph.begin(), sorted_graph.end());
-    return sorted_graph;
-}
 
-
-void printGraph(std::vector<node> &graph, int size) {
-    for (int i = 0; i < size; i++) {
-        std::cout << i+1 << " ->";
-
-        for (auto val: graph[i].children)
-            std::cout << " " << val;
-        
-        std::cout << "\n";
-    }  
+    std::cout << std::endl;
 }
